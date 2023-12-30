@@ -1,8 +1,26 @@
 const express = require("express");
+const redis = require('ioredis');
+
 const app = express();
 const port = process.env.PORT || 3001;
+const client = redis.createClient({host:'redis-12429.c267.us-east-1-4.ec2.cloud.redislabs.com',port:12429,username:'default',password:'password1234'});
 
-app.get("/", (req, res) => res.type('html').send(html));
+client.on('connect', () => {
+    console.log('Connected to Redis');
+});
+
+client.on('error', (err) => {
+    console.log('Redis error: ', err);
+});
+
+app.get("/", (req, res) => {
+  res.type('html').send(html));
+  client.set('visits', 0);
+    client.get('visits', (err, visits) => {
+        res.send('Number of visits is ' + visits);
+        client.set('visits', parseInt(visits) + 1);
+    });
+});
 
 const server = app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
