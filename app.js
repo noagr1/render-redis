@@ -14,7 +14,7 @@ client.on('error', (err) => {
 });
 
 app.get("/", (req, res) => {
-  res.type('html').send(html));
+  // res.type('html').send(html));
   client.set('visits', 0);
     client.get('visits', (err, visits) => {
         res.send('Number of visits is ' + visits);
